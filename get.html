@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>스도쿠 9 다운로드 · Download Sudoku 9</title>
+<meta name="description" content="스도쿠 9 - 광고 없는 깔끔한 무료 스도쿠. 기기에 맞는 스토어로 이동합니다.">
+<style>
+  :root{
+    --top:#1a64cc; --bot:#54a6f0; --ink:#0a2246; --card:#ffffff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Malgun Gothic",sans-serif;
+    min-height:100%; color:#fff; text-align:center;
+    background:linear-gradient(180deg,var(--top),var(--bot));
+    display:flex; align-items:center; justify-content:center; padding:24px;
+  }
+  .wrap{width:100%; max-width:420px}
+  .icon{width:132px;height:132px;border-radius:30px;margin:0 auto 22px;display:block;
+    box-shadow:0 12px 30px rgba(6,20,54,.35)}
+  h1{font-size:30px;font-weight:800;margin-bottom:8px;text-shadow:0 2px 6px rgba(10,30,70,.3)}
+  .sub{font-size:16px;opacity:.92;margin-bottom:30px}
+  .btn{display:flex;align-items:center;justify-content:center;gap:10px;
+    width:100%;padding:17px 20px;margin:12px 0;border-radius:16px;
+    font-size:18px;font-weight:700;text-decoration:none;cursor:pointer;border:none}
+  .play{background:#fff;color:#1a64cc;box-shadow:0 8px 20px rgba(6,20,54,.25)}
+  .ios{background:rgba(255,255,255,.16);color:#fff;border:1.5px solid rgba(255,255,255,.55)}
+  .ios .soon{font-size:12px;opacity:.85;font-weight:600;margin-left:6px}
+  .note{margin-top:22px;font-size:13px;opacity:.8;line-height:1.6}
+  .redir{margin-top:18px;font-size:14px;opacity:.9;display:none}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <img class="icon" src="icon.png" alt="Sudoku 9">
+    <h1>스도쿠 9 · Sudoku 9</h1>
+    <p class="sub">광고 없는 깔끔한 무료 스도쿠<br>Clean, free Sudoku</p>
+
+    <a class="btn play" id="playBtn"
+       href="https://play.google.com/store/apps/details?id=com.sudokugame.sudoku9">
+       ▶ Google Play
+    </a>
+    <a class="btn ios" id="iosBtn" href="#">
+       <span id="iosLabel"> App Store</span>
+    </a>
+
+    <p class="redir" id="redir">기기에 맞는 스토어로 이동 중… / Redirecting…</p>
+    <p class="note">버튼이 안 열리면 위 스토어를 직접 눌러주세요.<br>
+       If a store doesn't open, tap it manually above.</p>
+  </div>
+
+<script>
+  // ===== 설정 =====
+  var PLAY_URL = "https://play.google.com/store/apps/details?id=com.sudokugame.sudoku9";
+  // App Store 출시 후 아래에 실제 주소를 넣으세요. (예: https://apps.apple.com/app/id0000000000)
+  var APPSTORE_URL = "";   // 비어 있으면 iOS는 '곧 출시'로 표시
+  // ================
+
+  var ua = navigator.userAgent || "";
+  var isAndroid = /android/i.test(ua);
+  // iPadOS 13+ 는 Mac으로 위장 → 터치포인트로 보정
+  var isIOS = /iphone|ipad|ipod/i.test(ua) ||
+              (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+
+  var iosBtn = document.getElementById("iosBtn");
+  var iosLabel = document.getElementById("iosLabel");
+
+  if (APPSTORE_URL) {
+    iosBtn.href = APPSTORE_URL;
+    iosLabel.textContent = " App Store";
+  } else {
+    // 아직 iOS 미출시 → 버튼 비활성 느낌 + 안내
+    iosBtn.href = "#";
+    iosLabel.innerHTML = ' App Store <span class="soon">(곧 출시 / Coming soon)</span>';
+    iosBtn.addEventListener("click", function(e){ e.preventDefault(); });
+  }
+
+  // OS 자동 분기 (스토어 주소가 있을 때만 리다이렉트)
+  function go(url){
+    if(!url) return;
+    document.getElementById("redir").style.display = "block";
+    setTimeout(function(){ window.location.replace(url); }, 350);
+  }
+  if (isAndroid) {
+    go(PLAY_URL);
+  } else if (isIOS && APPSTORE_URL) {
+    go(APPSTORE_URL);
+  }
+  // 그 외(PC 등)는 버튼 두 개를 그대로 보여줌
+</script>
+</body>
+</html>
