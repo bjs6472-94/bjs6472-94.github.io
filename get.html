@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>스도쿠 9 다운로드 · Download Sudoku 9</title>
 <meta name="description" content="스도쿠 9 - 광고 없는 깔끔한 무료 스도쿠. 기기에 맞는 스토어로 이동합니다.">
+<!-- Google Analytics (GA4) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-53CZLHLL37"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-53CZLHLL37');
+</script>
 <style>
   :root{
     --top:#1a64cc; --bot:#54a6f0; --ink:#0a2246; --card:#ffffff;
@@ -77,18 +85,27 @@
     iosBtn.addEventListener("click", function(e){ e.preventDefault(); });
   }
 
+  // GA4 이벤트 전송 헬퍼 (실패해도 흐름 안 막음)
+  function track(name, params){ try{ gtag('event', name, params||{}); }catch(e){} }
+
   // OS 자동 분기 (스토어 주소가 있을 때만 리다이렉트)
-  function go(url){
+  function go(url, store){
     if(!url) return;
+    track('store_redirect', { store: store, auto: true });
     document.getElementById("redir").style.display = "block";
-    setTimeout(function(){ window.location.replace(url); }, 350);
+    setTimeout(function(){ window.location.replace(url); }, 400);
   }
   if (isAndroid) {
-    go(PLAY_URL);
+    go(PLAY_URL, 'google_play');
   } else if (isIOS && APPSTORE_URL) {
-    go(APPSTORE_URL);
+    go(APPSTORE_URL, 'app_store');
+  } else {
+    // PC 등 — 랜딩 노출 기록
+    track('landing_view', { os: 'other' });
   }
-  // 그 외(PC 등)는 버튼 두 개를 그대로 보여줌
+  // 수동 버튼 클릭 추적
+  document.getElementById('playBtn').addEventListener('click', function(){ track('store_click', { store: 'google_play' }); });
+  iosBtn.addEventListener('click', function(){ if (APPSTORE_URL) track('store_click', { store: 'app_store' }); });
 </script>
 </body>
 </html>
